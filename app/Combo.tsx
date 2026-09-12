@@ -1,21 +1,162 @@
-'use client';
-import {useState} from 'react';
+"use client";
+import { useState } from "react";
 
-const courseCodes:Record<string,string>={'Heat Transfer-I':'ME 3101','Fluid Mechanics-II':'ME 3105','Fluid Mechanics-II Sessional':'ME 3106','Design of Machine Elements-I':'ME 3109','Design of Machine Elements-I Sessional':'ME 3110','Instrumentation and Control':'ME 3115','Instrumentation and Control Sessional':'ME 3116','Engineering Materials and Metallurgy':'ME 3119','Engineering Materials and Metallurgy Sessional':'ME 3120','Heat Transfer-II':'ME 3201','Heat Transfer-II Sessional':'ME 3202','Engineering Mechanics-III':'ME 3203','Engineering Mechanics-III Sessional':'ME 3204','Design of Machine Elements-II':'ME 3209','Design of Machine Elements-II Sessional':'ME 3210','Mechatronic Systems':'ME 3215','Mechatronic Systems Sessional':'ME 3216','Energy Engineering & Technology':'ME 3221','Case Study in Mechanical Engineering':'ME 3200','Applied Thermodynamics-I':'ME 4101','Applied Thermodynamics-I Sessional':'ME 4102','Refrigeration and Mechanical Equipment in Buildings':'ME 4111','Refrigeration and Mechanical Equipment in Buildings Sessional':'ME 4112','Production Planning and Control':'ME 4117','Power Plant Engineering':'ME 4121','Project and Thesis':'ME 4100','Seminar':'ME 4110','Industrial Training':'ME 4120','Applied Thermodynamics-II':'ME 4201','Fluid Machinery':'ME 4205','Fluid Machinery Sessional':'ME 4206','Machine Tool and Tool Design':'ME 4207','Machine Tool and Tool Design Sessional':'ME 4208','Industrial Management':'ME 4217','Computer Aided Design':'ME 4113(a)','Energy Auditing':'ME 4113(b)','Nuclear Engineering':'ME 4113(c)','Polymer Processing':'ME 4113(d)','Operations Research':'ME 4113(e)','Machine Dynamics':'ME 4113(f)','Robotics':'ME 4113(g)','Bio Mechanics':'ME 4113(h)','Tribology':'ME 4113(i)','Bio Statistics':'ME 4113(j)','Automobile Engineering':'ME 4213(a)','Intelligent Control Engineering':'ME 4213(b)','Aerodynamics':'ME 4213(c)','Solar Energy':'ME 4213(d)','Managerial Economics':'ME 4213(e)','Noise and Vibration':'ME 4213(f)','Mechanical Behavior of Materials':'ME 4213(g)','Computational Fluid Dynamics':'ME 4213(h)','Bio Transport':'ME 4213(i)','Railway Engineering':'ME 4213(j)'};
+const courseCodes: Record<string, string> = {
+  "Heat Transfer-I": "ME 3101",
+  "Fluid Mechanics-II": "ME 3105",
+  "Fluid Mechanics-II Sessional": "ME 3106",
+  "Design of Machine Elements-I": "ME 3109",
+  "Design of Machine Elements-I Sessional": "ME 3110",
+  "Instrumentation and Control": "ME 3115",
+  "Instrumentation and Control Sessional": "ME 3116",
+  "Engineering Materials and Metallurgy": "ME 3119",
+  "Engineering Materials and Metallurgy Sessional": "ME 3120",
+  "Heat Transfer-II": "ME 3201",
+  "Heat Transfer-II Sessional": "ME 3202",
+  "Engineering Mechanics-III": "ME 3203",
+  "Engineering Mechanics-III Sessional": "ME 3204",
+  "Design of Machine Elements-II": "ME 3209",
+  "Design of Machine Elements-II Sessional": "ME 3210",
+  "Mechatronic Systems": "ME 3215",
+  "Mechatronic Systems Sessional": "ME 3216",
+  "Energy Engineering & Technology": "ME 3221",
+  "Case Study in Mechanical Engineering": "ME 3200",
+  "Applied Thermodynamics-I": "ME 4101",
+  "Applied Thermodynamics-I Sessional": "ME 4102",
+  "Refrigeration and Mechanical Equipment in Buildings": "ME 4111",
+  "Refrigeration and Mechanical Equipment in Buildings Sessional": "ME 4112",
+  "Production Planning and Control": "ME 4117",
+  "Power Plant Engineering": "ME 4121",
+  "Project and Thesis": "ME 4100",
+  Seminar: "ME 4110",
+  "Industrial Training": "ME 4120",
+  "Applied Thermodynamics-II": "ME 4201",
+  "Fluid Machinery": "ME 4205",
+  "Fluid Machinery Sessional": "ME 4206",
+  "Machine Tool and Tool Design": "ME 4207",
+  "Machine Tool and Tool Design Sessional": "ME 4208",
+  "Industrial Management": "ME 4217",
+  "Computer Aided Design": "ME 4113(a)",
+  "Energy Auditing": "ME 4113(b)",
+  "Nuclear Engineering": "ME 4113(c)",
+  "Polymer Processing": "ME 4113(d)",
+  "Operations Research": "ME 4113(e)",
+  "Machine Dynamics": "ME 4113(f)",
+  Robotics: "ME 4113(g)",
+  "Bio Mechanics": "ME 4113(h)",
+  Tribology: "ME 4113(i)",
+  "Bio Statistics": "ME 4113(j)",
+  "Automobile Engineering": "ME 4213(a)",
+  "Intelligent Control Engineering": "ME 4213(b)",
+  Aerodynamics: "ME 4213(c)",
+  "Solar Energy": "ME 4213(d)",
+  "Managerial Economics": "ME 4213(e)",
+  "Noise and Vibration": "ME 4213(f)",
+  "Mechanical Behavior of Materials": "ME 4213(g)",
+  "Computational Fluid Dynamics": "ME 4213(h)",
+  "Bio Transport": "ME 4213(i)",
+  "Railway Engineering": "ME 4213(j)",
+};
 
-function updateCourseCode(title:string){const code=courseCodes[title];if(!code)return;const input=Array.from(document.querySelectorAll<HTMLInputElement>('.combo input')).find(node=>node.closest('label')?.querySelector(':scope > span')?.textContent==='Course no');if(!input)return;Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')?.set?.call(input,code);input.dispatchEvent(new Event('input',{bubbles:true}))}
+function updateCourseCode(title: string) {
+  const code = courseCodes[title];
+  if (!code) return;
+  const input = Array.from(
+    document.querySelectorAll<HTMLInputElement>(".combo input"),
+  ).find(
+    (node) =>
+      node.closest("label")?.querySelector(":scope > span")?.textContent ===
+      "Course no",
+  );
+  if (!input) return;
+  Object.getOwnPropertyDescriptor(
+    HTMLInputElement.prototype,
+    "value",
+  )?.set?.call(input, code);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
 
-export default function Combo({label,value,list,onChange,onSelect}:{label:string;value:string;list:string[];onChange:(v:string)=>void;onSelect?:(v:string)=>void}){
-  const[open,setOpen]=useState(false),[showAll,setShowAll]=useState(false);
-  const query=value.trim().toLowerCase();
-  const matches=showAll||!query?list:list.filter(item=>item.toLowerCase().includes(query));
-  const pick=(item:string)=>{onChange(item);onSelect?.(item);if(label==='Course title')updateCourseCode(item);setShowAll(false);setOpen(false)};
-  return <label className={`field combo ${open&&list.length?'is-open':''}`}>
-    <span>{label}</span>
-    <div className="combo-control">
-      <input value={value} autoComplete="off" role="combobox" aria-expanded={open&&list.length>0} aria-autocomplete="list" onFocus={()=>list.length&&setOpen(true)} onClick={()=>list.length&&setOpen(true)} onBlur={()=>setTimeout(()=>setOpen(false),120)} onChange={e=>{onChange(e.target.value);setShowAll(false);setOpen(true)}}/>
-      {list.length>0&&<button type="button" className="combo-arrow" aria-label={`Show all ${label} suggestions`} onMouseDown={e=>e.preventDefault()} onClick={()=>{setShowAll(true);setOpen(current=>!current)}}>⌄</button>}
-    </div>
-    {open&&list.length>0&&<div className="combo-menu" role="listbox">{matches.length?matches.map((item,index)=><button type="button" role="option" aria-selected={item===value} key={`${item}-${index}`} onMouseDown={e=>e.preventDefault()} onClick={()=>pick(item)}>{item}</button>):<div className="combo-empty">No match — keep your custom entry</div>}</div>}
-  </label>;
+export default function Combo({
+  label,
+  value,
+  list,
+  onChange,
+  onSelect,
+}: {
+  label: string;
+  value: string;
+  list: string[];
+  onChange: (v: string) => void;
+  onSelect?: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false),
+    [showAll, setShowAll] = useState(false);
+  const query = value.trim().toLowerCase();
+  const matches =
+    showAll || !query
+      ? list
+      : list.filter((item) => item.toLowerCase().includes(query));
+  const pick = (item: string) => {
+    onChange(item);
+    onSelect?.(item);
+    if (label === "Course title") updateCourseCode(item);
+    setShowAll(false);
+    setOpen(false);
+  };
+  return (
+    <label className={`field combo ${open && list.length ? "is-open" : ""}`}>
+      <span>{label}</span>
+      <div className="combo-control">
+        <input
+          value={value}
+          autoComplete="off"
+          role="combobox"
+          aria-expanded={open && list.length > 0}
+          aria-autocomplete="list"
+          onFocus={() => list.length && setOpen(true)}
+          onClick={() => list.length && setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 120)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setShowAll(false);
+            setOpen(true);
+          }}
+        />
+        {list.length > 0 && (
+          <button
+            type="button"
+            className="combo-arrow"
+            aria-label={`Show all ${label} suggestions`}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              setShowAll(true);
+              setOpen((current) => !current);
+            }}
+          >
+            ⌄
+          </button>
+        )}
+      </div>
+      {open && list.length > 0 && (
+        <div className="combo-menu" role="listbox">
+          {matches.length ? (
+            matches.map((item, index) => (
+              <button
+                type="button"
+                role="option"
+                aria-selected={item === value}
+                key={`${item}-${index}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => pick(item)}
+              >
+                {item}
+              </button>
+            ))
+          ) : (
+            <div className="combo-empty">No match — keep your custom entry</div>
+          )}
+        </div>
+      )}
+    </label>
+  );
 }

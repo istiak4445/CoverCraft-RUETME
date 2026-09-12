@@ -1,9 +1,450 @@
-'use client';
-import {useEffect,useMemo,useState} from 'react';
-import Combo from './Combo';
-type Cover={type:string;courseNo:string;courseTitle:string;itemNo:string;itemName:string;name:string;roll:string;section:string;session:string;date:string;teacher:string;designation:string};
-const courses=[['ME 3101','Heat Transfer-I'],['ME 3105','Fluid Mechanics-II'],['ME 3106','Fluid Mechanics-II Sessional'],['ME 3109','Design of Machine Elements-I'],['ME 3110','Design of Machine Elements-I Sessional'],['ME 3115','Instrumentation and Control'],['ME 3116','Instrumentation and Control Sessional'],['ME 3119','Engineering Materials and Metallurgy'],['ME 3120','Engineering Materials and Metallurgy Sessional'],['ME 3201','Heat Transfer-II'],['ME 3202','Heat Transfer-II Sessional'],['ME 3203','Engineering Mechanics-III'],['ME 3204','Engineering Mechanics-III Sessional'],['ME 3209','Design of Machine Elements-II'],['ME 3210','Design of Machine Elements-II Sessional'],['ME 3215','Mechatronic Systems'],['ME 3216','Mechatronic Systems Sessional'],['ME 3221','Energy Engineering & Technology'],['ME 3200','Case Study in Mechanical Engineering'],['ME 4101','Applied Thermodynamics-I'],['ME 4102','Applied Thermodynamics-I Sessional'],['ME 4111','Refrigeration and Mechanical Equipment in Buildings'],['ME 4112','Refrigeration and Mechanical Equipment in Buildings Sessional'],['ME 4117','Production Planning and Control'],['ME 4121','Power Plant Engineering'],['ME 4100','Project and Thesis'],['ME 4110','Seminar'],['ME 4120','Industrial Training'],['ME 4201','Applied Thermodynamics-II'],['ME 4205','Fluid Machinery'],['ME 4206','Fluid Machinery Sessional'],['ME 4207','Machine Tool and Tool Design'],['ME 4208','Machine Tool and Tool Design Sessional'],['ME 4217','Industrial Management'],['ME 4200','Project and Thesis'],['ME 4210','Seminar'],['ME 4113(a)','Computer Aided Design'],['ME 4113(b)','Energy Auditing'],['ME 4113(c)','Nuclear Engineering'],['ME 4113(d)','Polymer Processing'],['ME 4113(e)','Operations Research'],['ME 4113(f)','Machine Dynamics'],['ME 4113(g)','Robotics'],['ME 4113(h)','Bio Mechanics'],['ME 4113(i)','Tribology'],['ME 4113(j)','Bio Statistics'],['ME 4213(a)','Automobile Engineering'],['ME 4213(b)','Intelligent Control Engineering'],['ME 4213(c)','Aerodynamics'],['ME 4213(d)','Solar Energy'],['ME 4213(e)','Managerial Economics'],['ME 4213(f)','Noise and Vibration'],['ME 4213(g)','Mechanical Behavior of Materials'],['ME 4213(h)','Computational Fluid Dynamics'],['ME 4213(i)','Bio Transport'],['ME 4213(j)','Railway Engineering']];
-const teachers=[['Dr. Mohammad Shahed H K Tushar','Professor'],['Dr. Mohammad Rofiqul Islam','Professor'],['Dr. Nirendra Nath Mustafi','Professor'],['Dr. Md. Emdadul Hoque','Professor'],['Dr. Md. Rokunuzzaman','Professor'],['Dr. Md. Nurul Islam','Professor'],['Dr. Mhia Md. Zaglul Shahadat','Professor'],['Dr. Md Rabiul Islam Sarker','Professor'],['Dr. Shahajada Mahmudul Hasan','Professor'],['Dr. Mohammad U. H. Joardder','Professor'],['Dr. Barun Kumar Das','Professor'],['Dr. Md. Shazib Uddin','Professor'],['Dr. Md. Abdul Kader','Professor'],['Md. Wahedul Islam','Professor'],['Dr. Syed Mamun R Rasid','Professor'],['Dr. Md. Abdur Rahim','Professor'],['Tasnuva Tabashhum Choudhury','Associate Professor'],['Asma-Ul-Husna','Associate Professor'],['Dr. Monjur Mourshed','Associate Professor'],['Dr. Mahadi Hasan Masud','Associate Professor'],['Md. Riaz Pervez','Assistant Professor'],['Md Saiful Islam','Assistant Professor'],['Dr. Sumaiya Sadika Tuly','Assistant Professor'],['Dr. Jannatul Ferdous','Assistant Professor'],['Md. Golam Kibria','Assistant Professor'],['Pronob Das','Assistant Professor'],['Abdul mojid parvej','Assistant Professor'],['Md. Sanowar Hossain','Assistant Professor'],['Md. Nahid Hossan','Assistant Professor'],['Md. Bakhtierkhalzi','Assistant Professor'],['Miftahul Mobin Chowdhury Shabdik','Assistant Professor'],['Md. Mostafa Kamal','Assistant Professor'],['Mim Mashrur Ahmed','Assistant Professor'],['Durjoy Kumar Paul','Assistant Professor'],['Raihan Karal','Assistant Professor'],['Md. Hasibul Hasan Himel','Assistant Professor'],['FAZLUR RASHID','Lecturer'],['Oishwarjya Ferdous','Lecturer'],['Easmin Sultana','Lecturer'],['SHAH MOHAMMED TAKRIM','Lecturer'],['Asma Akhter','Lecturer'],['Md. Mahabur Rahaman','Lecturer'],['Md. Rasel Ahmed','Lecturer'],['Md. Tanjeeb Hossen Akash','Lecturer'],['MD. AL-AMIN','Lecturer'],['Kazi Sumaya Islam Payel','Lecturer'],['Mohammad Raihan','Lecturer'],['Md. Sajjad Hasan','Lecturer']];
-const initial:Cover={type:'Assignment',courseNo:'ME 3221',courseTitle:'Energy Engineering & Technology',itemNo:'01',itemName:'Study of Longwall Coal Mining Method',name:'Istiak Ahmed',roll:'2202155',section:'C',session:'2022-2023',date:'25/08/2026',teacher:'Raihan Karal',designation:'Assistant Professor'};
-function Paper({c}:{c:Cover}){return <article className="paper"><header className="paper-head"><h1>Rajshahi University of Engineering &amp; Technology</h1><h2>Department of Mechanical Engineering</h2><img src="/ruet-logo.png" alt="RUET logo"/></header><section className="details"><p><b>Course No:</b> {c.courseNo}</p><p><b>Course Title:</b> {c.courseTitle}</p><p><b>{c.type} No:</b> {c.itemNo}</p><p><b>{c.type} Name:</b> {c.itemName}</p></section><section className="submit-box"><div><h3>Submitted By</h3><p>Name: {c.name}<br/>Roll: {c.roll}<br/>Section: {c.section}<br/>Session: {c.session}<br/>Date of submission: {c.date}</p></div><div><h3>Submitted To</h3><p>{c.teacher}<br/>{c.designation}<br/>Department of Mechanical Engineering,<br/>RUET</p></div></section></article>}
-export default function Home(){const[form,setForm]=useState<Cover>(initial),[batch,setBatch]=useState<Cover[]>([]),[tab,setTab]=useState<'edit'|'batch'>('edit');useEffect(()=>{const saved=localStorage.getItem('ruet-cover-defaults');if(saved)setForm(f=>({...f,...JSON.parse(saved)}))},[]);const set=(k:keyof Cover,v:string)=>setForm(f=>({...f,[k]:v}));const courseNos=useMemo(()=>courses.map(c=>c[0]),[]),courseTitles=useMemo(()=>courses.map(c=>c[1]),[]);const chooseCourse=(v:string)=>{const found=courses.find(c=>c[0]===v);setForm(f=>({...f,courseNo:v,...(found?{courseTitle:found[1]}:{})}))};const chooseTeacher=(v:string)=>{const found=teachers.find(t=>t[0]===v);setForm(f=>({...f,teacher:v,...(found?{designation:found[1]}:{})}))};const shown=tab==='batch'&&batch.length?batch:[form];return <main className="app-shell"><aside className="editor no-print"><div className="brand"><div className="brand-mark">ME</div><div><strong>CoverCraft</strong><small>RUET Mechanical</small></div></div><div className="eyebrow">A4 COVER GENERATOR</div><h1>Make a clean cover in seconds.</h1><p className="intro">Every dropdown is editable. Pick a suggestion or type your own.</p><div className="tabs"><button className={tab==='edit'?'active':''} onClick={()=>setTab('edit')}>Single cover</button><button className={tab==='batch'?'active':''} onClick={()=>setTab('batch')}>Batch <em>{batch.length}</em></button></div>{tab==='edit'?<div className="form-grid"><Combo label="Cover type" value={form.type} list={['Assignment','Lab Report']} onChange={v=>set('type',v)}/><Combo label="Course no" value={form.courseNo} list={courseNos} onChange={chooseCourse}/><Combo label="Course title" value={form.courseTitle} list={courseTitles} onChange={v=>set('courseTitle',v)}/><div className="two"><Combo label={`${form.type} no`} value={form.itemNo} list={['01','02','03','04','05']} onChange={v=>set('itemNo',v)}/><Combo label="Section" value={form.section} list={['A','B','C']} onChange={v=>set('section',v)}/></div><Combo label={`${form.type} name / title`} value={form.itemName} list={[]} onChange={v=>set('itemName',v)}/><div className="section-label">STUDENT <button onClick={()=>localStorage.setItem('ruet-cover-defaults',JSON.stringify({name:form.name,roll:form.roll,section:form.section,session:form.session}))}>Save as default</button></div><Combo label="Name" value={form.name} list={[]} onChange={v=>set('name',v)}/><div className="two"><Combo label="Roll" value={form.roll} list={[]} onChange={v=>set('roll',v)}/><Combo label="Session" value={form.session} list={['2022-2023','2023-2024','2024-2025']} onChange={v=>set('session',v)}/></div><Combo label="Date of submission" value={form.date} list={[]} onChange={v=>set('date',v)}/><div className="section-label">SUBMITTED TO <a href="https://www.me.ruet.ac.bd/teacher" target="_blank">RUET directory ↗</a></div><Combo label="Teacher" value={form.teacher} list={teachers.map(t=>t[0])} onChange={chooseTeacher}/><Combo label="Designation" value={form.designation} list={['Professor','Associate Professor','Assistant Professor','Lecturer']} onChange={v=>set('designation',v)}/><div className="actions"><button className="secondary" onClick={()=>setBatch(b=>[...b,{...form}])}>+ Add to batch</button><button className="primary" onClick={()=>window.print()}>Export A4 PDF</button></div></div>:<div className="batch-panel"><p>{batch.length?`${batch.length} cover${batch.length>1?'s':''} ready. Export creates one A4 page per cover.`:'Add covers from Single cover first.'}</p>{batch.map((c,i)=><div className="batch-row" key={i}><span>{i+1}</span><div><b>{c.type} {c.itemNo}</b><small>{c.courseNo} · {c.itemName}</small></div><button onClick={()=>setBatch(b=>b.filter((_,x)=>x!==i))}>×</button></div>)}<div className="actions"><button className="secondary" onClick={()=>setBatch([])} disabled={!batch.length}>Clear all</button><button className="primary" onClick={()=>window.print()} disabled={!batch.length}>Export all as PDF</button></div></div>}</aside><section className="preview"><div className="preview-bar no-print"><span>LIVE A4 PREVIEW</span><span>{shown.length} PAGE{shown.length>1?'S':''} · 210 × 297 MM</span></div><div className="papers">{shown.map((c,i)=><Paper c={c} key={i}/>)}</div></section></main>}
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import Combo from "./Combo";
+import { exportCoversToDocx } from "./docxExport";
+type Cover = {
+  type: string;
+  courseNo: string;
+  courseTitle: string;
+  itemNo: string;
+  itemName: string;
+  name: string;
+  roll: string;
+  section: string;
+  session: string;
+  date: string;
+  teacher: string;
+  designation: string;
+};
+const courses = [
+  ["ME 3101", "Heat Transfer-I"],
+  ["ME 3105", "Fluid Mechanics-II"],
+  ["ME 3106", "Fluid Mechanics-II Sessional"],
+  ["ME 3109", "Design of Machine Elements-I"],
+  ["ME 3110", "Design of Machine Elements-I Sessional"],
+  ["ME 3115", "Instrumentation and Control"],
+  ["ME 3116", "Instrumentation and Control Sessional"],
+  ["ME 3119", "Engineering Materials and Metallurgy"],
+  ["ME 3120", "Engineering Materials and Metallurgy Sessional"],
+  ["ME 3201", "Heat Transfer-II"],
+  ["ME 3202", "Heat Transfer-II Sessional"],
+  ["ME 3203", "Engineering Mechanics-III"],
+  ["ME 3204", "Engineering Mechanics-III Sessional"],
+  ["ME 3209", "Design of Machine Elements-II"],
+  ["ME 3210", "Design of Machine Elements-II Sessional"],
+  ["ME 3215", "Mechatronic Systems"],
+  ["ME 3216", "Mechatronic Systems Sessional"],
+  ["ME 3221", "Energy Engineering & Technology"],
+  ["ME 3200", "Case Study in Mechanical Engineering"],
+  ["ME 4101", "Applied Thermodynamics-I"],
+  ["ME 4102", "Applied Thermodynamics-I Sessional"],
+  ["ME 4111", "Refrigeration and Mechanical Equipment in Buildings"],
+  ["ME 4112", "Refrigeration and Mechanical Equipment in Buildings Sessional"],
+  ["ME 4117", "Production Planning and Control"],
+  ["ME 4121", "Power Plant Engineering"],
+  ["ME 4100", "Project and Thesis"],
+  ["ME 4110", "Seminar"],
+  ["ME 4120", "Industrial Training"],
+  ["ME 4201", "Applied Thermodynamics-II"],
+  ["ME 4205", "Fluid Machinery"],
+  ["ME 4206", "Fluid Machinery Sessional"],
+  ["ME 4207", "Machine Tool and Tool Design"],
+  ["ME 4208", "Machine Tool and Tool Design Sessional"],
+  ["ME 4217", "Industrial Management"],
+  ["ME 4200", "Project and Thesis"],
+  ["ME 4210", "Seminar"],
+  ["ME 4113(a)", "Computer Aided Design"],
+  ["ME 4113(b)", "Energy Auditing"],
+  ["ME 4113(c)", "Nuclear Engineering"],
+  ["ME 4113(d)", "Polymer Processing"],
+  ["ME 4113(e)", "Operations Research"],
+  ["ME 4113(f)", "Machine Dynamics"],
+  ["ME 4113(g)", "Robotics"],
+  ["ME 4113(h)", "Bio Mechanics"],
+  ["ME 4113(i)", "Tribology"],
+  ["ME 4113(j)", "Bio Statistics"],
+  ["ME 4213(a)", "Automobile Engineering"],
+  ["ME 4213(b)", "Intelligent Control Engineering"],
+  ["ME 4213(c)", "Aerodynamics"],
+  ["ME 4213(d)", "Solar Energy"],
+  ["ME 4213(e)", "Managerial Economics"],
+  ["ME 4213(f)", "Noise and Vibration"],
+  ["ME 4213(g)", "Mechanical Behavior of Materials"],
+  ["ME 4213(h)", "Computational Fluid Dynamics"],
+  ["ME 4213(i)", "Bio Transport"],
+  ["ME 4213(j)", "Railway Engineering"],
+];
+const teachers = [
+  ["Dr. Mohammad Shahed H K Tushar", "Professor"],
+  ["Dr. Mohammad Rofiqul Islam", "Professor"],
+  ["Dr. Nirendra Nath Mustafi", "Professor"],
+  ["Dr. Md. Emdadul Hoque", "Professor"],
+  ["Dr. Md. Rokunuzzaman", "Professor"],
+  ["Dr. Md. Nurul Islam", "Professor"],
+  ["Dr. Mhia Md. Zaglul Shahadat", "Professor"],
+  ["Dr. Md Rabiul Islam Sarker", "Professor"],
+  ["Dr. Shahajada Mahmudul Hasan", "Professor"],
+  ["Dr. Mohammad U. H. Joardder", "Professor"],
+  ["Dr. Barun Kumar Das", "Professor"],
+  ["Dr. Md. Shazib Uddin", "Professor"],
+  ["Dr. Md. Abdul Kader", "Professor"],
+  ["Md. Wahedul Islam", "Professor"],
+  ["Dr. Syed Mamun R Rasid", "Professor"],
+  ["Dr. Md. Abdur Rahim", "Professor"],
+  ["Tasnuva Tabashhum Choudhury", "Associate Professor"],
+  ["Asma-Ul-Husna", "Associate Professor"],
+  ["Dr. Monjur Mourshed", "Associate Professor"],
+  ["Dr. Mahadi Hasan Masud", "Associate Professor"],
+  ["Md. Riaz Pervez", "Assistant Professor"],
+  ["Md Saiful Islam", "Assistant Professor"],
+  ["Dr. Sumaiya Sadika Tuly", "Assistant Professor"],
+  ["Dr. Jannatul Ferdous", "Assistant Professor"],
+  ["Md. Golam Kibria", "Assistant Professor"],
+  ["Pronob Das", "Assistant Professor"],
+  ["Abdul mojid parvej", "Assistant Professor"],
+  ["Md. Sanowar Hossain", "Assistant Professor"],
+  ["Md. Nahid Hossan", "Assistant Professor"],
+  ["Md. Bakhtierkhalzi", "Assistant Professor"],
+  ["Miftahul Mobin Chowdhury Shabdik", "Assistant Professor"],
+  ["Md. Mostafa Kamal", "Assistant Professor"],
+  ["Mim Mashrur Ahmed", "Assistant Professor"],
+  ["Durjoy Kumar Paul", "Assistant Professor"],
+  ["Raihan Karal", "Assistant Professor"],
+  ["Md. Hasibul Hasan Himel", "Assistant Professor"],
+  ["FAZLUR RASHID", "Lecturer"],
+  ["Oishwarjya Ferdous", "Lecturer"],
+  ["Easmin Sultana", "Lecturer"],
+  ["SHAH MOHAMMED TAKRIM", "Lecturer"],
+  ["Asma Akhter", "Lecturer"],
+  ["Md. Mahabur Rahaman", "Lecturer"],
+  ["Md. Rasel Ahmed", "Lecturer"],
+  ["Md. Tanjeeb Hossen Akash", "Lecturer"],
+  ["MD. AL-AMIN", "Lecturer"],
+  ["Kazi Sumaya Islam Payel", "Lecturer"],
+  ["Mohammad Raihan", "Lecturer"],
+  ["Md. Sajjad Hasan", "Lecturer"],
+];
+const initial: Cover = {
+  type: "Assignment",
+  courseNo: "ME 3221",
+  courseTitle: "Energy Engineering & Technology",
+  itemNo: "01",
+  itemName: "Study of Longwall Coal Mining Method",
+  name: "Istiak Ahmed",
+  roll: "2202155",
+  section: "C",
+  session: "2022-2023",
+  date: "25/08/2026",
+  teacher: "Raihan Karal",
+  designation: "Assistant Professor",
+};
+function Paper({ c }: { c: Cover }) {
+  return (
+    <article className="paper">
+      <header className="paper-head">
+        <h1>Rajshahi University of Engineering &amp; Technology</h1>
+        <h2>Department of Mechanical Engineering</h2>
+        <img src="/ruet-logo.png" alt="RUET logo" />
+      </header>
+      <section className="details">
+        <p>
+          <b>Course No:</b> {c.courseNo}
+        </p>
+        <p>
+          <b>Course Title:</b> {c.courseTitle}
+        </p>
+        <p>
+          <b>{c.type} No:</b> {c.itemNo}
+        </p>
+        <p>
+          <b>{c.type} Name:</b> {c.itemName}
+        </p>
+      </section>
+      <section className="submit-box">
+        <div>
+          <h3>Submitted By</h3>
+          <p>
+            Name: {c.name}
+            <br />
+            Roll: {c.roll}
+            <br />
+            Section: {c.section}
+            <br />
+            Session: {c.session}
+            <br />
+            Date of submission: {c.date}
+          </p>
+        </div>
+        <div>
+          <h3>Submitted To</h3>
+          <p>
+            {c.teacher}
+            <br />
+            {c.designation}
+            <br />
+            Department of Mechanical Engineering,
+            <br />
+            RUET
+          </p>
+        </div>
+      </section>
+    </article>
+  );
+}
+export default function Home() {
+  const [form, setForm] = useState<Cover>(initial),
+    [batch, setBatch] = useState<Cover[]>([]),
+    [tab, setTab] = useState<"edit" | "batch">("edit");
+  useEffect(() => {
+    const saved = localStorage.getItem("ruet-cover-defaults");
+    if (saved) setForm((f) => ({ ...f, ...JSON.parse(saved) }));
+  }, []);
+  const set = (k: keyof Cover, v: string) => setForm((f) => ({ ...f, [k]: v }));
+  const courseNos = useMemo(() => courses.map((c) => c[0]), []),
+    courseTitles = useMemo(() => courses.map((c) => c[1]), []);
+  const chooseCourse = (v: string) => {
+    const found = courses.find((c) => c[0] === v);
+    setForm((f) => ({
+      ...f,
+      courseNo: v,
+      ...(found ? { courseTitle: found[1] } : {}),
+    }));
+  };
+  const chooseTeacher = (v: string) => {
+    const found = teachers.find((t) => t[0] === v);
+    setForm((f) => ({
+      ...f,
+      teacher: v,
+      ...(found ? { designation: found[1] } : {}),
+    }));
+  };
+  const shown = tab === "batch" && batch.length ? batch : [form];
+  const exportDocx = async (covers: Cover[]) => {
+    try {
+      await exportCoversToDocx(covers);
+    } catch (error) {
+      console.error(error);
+      window.alert("DOCX export failed. Please try again.");
+    }
+  };
+  return (
+    <main className="app-shell">
+      <aside className="editor no-print">
+        <div className="brand">
+          <div className="brand-mark">ME</div>
+          <div>
+            <strong>CoverCraft</strong>
+            <small>RUET Mechanical</small>
+          </div>
+        </div>
+        <div className="eyebrow">A4 COVER GENERATOR</div>
+        <h1>Make a clean cover in seconds.</h1>
+        <p className="intro">
+          Every dropdown is editable. Pick a suggestion or type your own.
+        </p>
+        <div className="tabs">
+          <button
+            className={tab === "edit" ? "active" : ""}
+            onClick={() => setTab("edit")}
+          >
+            Single cover
+          </button>
+          <button
+            className={tab === "batch" ? "active" : ""}
+            onClick={() => setTab("batch")}
+          >
+            Batch <em>{batch.length}</em>
+          </button>
+        </div>
+        {tab === "edit" ? (
+          <div className="form-grid">
+            <Combo
+              label="Cover type"
+              value={form.type}
+              list={["Assignment", "Lab Report"]}
+              onChange={(v) => set("type", v)}
+            />
+            <Combo
+              label="Course no"
+              value={form.courseNo}
+              list={courseNos}
+              onChange={chooseCourse}
+            />
+            <Combo
+              label="Course title"
+              value={form.courseTitle}
+              list={courseTitles}
+              onChange={(v) => set("courseTitle", v)}
+            />
+            <div className="two">
+              <Combo
+                label={`${form.type} no`}
+                value={form.itemNo}
+                list={["01", "02", "03", "04", "05"]}
+                onChange={(v) => set("itemNo", v)}
+              />
+              <Combo
+                label="Section"
+                value={form.section}
+                list={["A", "B", "C"]}
+                onChange={(v) => set("section", v)}
+              />
+            </div>
+            <Combo
+              label={`${form.type} name / title`}
+              value={form.itemName}
+              list={[]}
+              onChange={(v) => set("itemName", v)}
+            />
+            <div className="section-label">
+              STUDENT{" "}
+              <button
+                onClick={() =>
+                  localStorage.setItem(
+                    "ruet-cover-defaults",
+                    JSON.stringify({
+                      name: form.name,
+                      roll: form.roll,
+                      section: form.section,
+                      session: form.session,
+                    }),
+                  )
+                }
+              >
+                Save as default
+              </button>
+            </div>
+            <Combo
+              label="Name"
+              value={form.name}
+              list={[]}
+              onChange={(v) => set("name", v)}
+            />
+            <div className="two">
+              <Combo
+                label="Roll"
+                value={form.roll}
+                list={[]}
+                onChange={(v) => set("roll", v)}
+              />
+              <Combo
+                label="Session"
+                value={form.session}
+                list={["2022-2023", "2023-2024", "2024-2025"]}
+                onChange={(v) => set("session", v)}
+              />
+            </div>
+            <Combo
+              label="Date of submission"
+              value={form.date}
+              list={[]}
+              onChange={(v) => set("date", v)}
+            />
+            <div className="section-label">
+              SUBMITTED TO{" "}
+              <a href="https://www.me.ruet.ac.bd/teacher" target="_blank">
+                RUET directory ↗
+              </a>
+            </div>
+            <Combo
+              label="Teacher"
+              value={form.teacher}
+              list={teachers.map((t) => t[0])}
+              onChange={chooseTeacher}
+            />
+            <Combo
+              label="Designation"
+              value={form.designation}
+              list={[
+                "Professor",
+                "Associate Professor",
+                "Assistant Professor",
+                "Lecturer",
+              ]}
+              onChange={(v) => set("designation", v)}
+            />
+            <div className="actions three">
+              <button
+                className="secondary"
+                onClick={() => setBatch((b) => [...b, { ...form }])}
+              >
+                + Add to batch
+              </button>
+              <button className="primary" onClick={() => window.print()}>
+                Export A4 PDF
+              </button>
+              <button
+                className="docx-button"
+                onClick={() => exportDocx([form])}
+              >
+                Export DOCX
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="batch-panel">
+            <p>
+              {batch.length
+                ? `${batch.length} cover${batch.length > 1 ? "s" : ""} ready. Export creates one A4 page per cover.`
+                : "Add covers from Single cover first."}
+            </p>
+            {batch.map((c, i) => (
+              <div className="batch-row" key={i}>
+                <span>{i + 1}</span>
+                <div>
+                  <b>
+                    {c.type} {c.itemNo}
+                  </b>
+                  <small>
+                    {c.courseNo} · {c.itemName}
+                  </small>
+                </div>
+                <button
+                  onClick={() => setBatch((b) => b.filter((_, x) => x !== i))}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <div className="actions three">
+              <button
+                className="secondary"
+                onClick={() => setBatch([])}
+                disabled={!batch.length}
+              >
+                Clear all
+              </button>
+              <button
+                className="primary"
+                onClick={() => window.print()}
+                disabled={!batch.length}
+              >
+                Export all as PDF
+              </button>
+              <button
+                className="docx-button"
+                onClick={() => exportDocx(batch)}
+                disabled={!batch.length}
+              >
+                Export all as DOCX
+              </button>
+            </div>
+          </div>
+        )}
+      </aside>
+      <section className="preview">
+        <div className="preview-bar no-print">
+          <span>LIVE A4 PREVIEW</span>
+          <span>
+            {shown.length} PAGE{shown.length > 1 ? "S" : ""} · 210 × 297 MM
+          </span>
+        </div>
+        <div className="papers">
+          {shown.map((c, i) => (
+            <Paper c={c} key={i} />
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
